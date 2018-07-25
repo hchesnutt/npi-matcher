@@ -1,5 +1,12 @@
+# Node Modules
+node_modules
+
 # JSON data files
 *data.json
 
 # CSV data files
 *data.csv
+
+# Elastic Keys
+config.json
+
