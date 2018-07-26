@@ -1,0 +1,7 @@
+// 1. Paste in user and key credentials
+// 2. Rename file to config.json
+
+{
+  "USER": "USERNAME_HERE",
+  "KEY": "USER_KEY_HERE"
+}
