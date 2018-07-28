@@ -3,6 +3,11 @@ node_modules
 
 # JSON data files
 *data.json
+*NPI_data.json
+
+# Output data files
+*NPI.csv
+*NPI.JSON
 
 # Elastic Keys
 config.json
