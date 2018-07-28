@@ -1,5 +1,6 @@
 const { resolve } = require('path');
 const { yellow, green } = require('chalk');
+const ora = require('ora');
 
 const findDoctors = require('./elasticsearch/findDoctors.js');
 const { parseDoctors, 
@@ -16,28 +17,36 @@ const doctorsRaw = require(pathToDoctorsJSON);
 const keys = Object.keys(doctorsRaw);
 const doctors = parseDoctors(doctorsRaw, keys);
 
-try {
-  console.time(' Total time:')
+console.time(' Total time:')
+const spinner = ora({
+  text: 'Matching doctor data to NPI',
+  spinner: 'dots10',
+}).start();
 
+try {
   // Query Elasticsearch
   findDoctors([...doctors], async (responses) => {
     responses = await responses;
+    
     // Parse Elasticsearch responses
+    spinner.stopAndPersist({ text: 'Parsing responses', }).start();
     const matchedDoctors = parseResponses(responses);
+    
     // Decorate raw doctor data with NPI from responses
     const doctorsRawWithNPI = decorateWithNPI(doctorsRaw, keys, matchedDoctors);
-
+    
     // Write decorated doctor data to file as JSON
+    spinner.stopAndPersist({ text: 'Writing results to destination files', }).start();
     writeToJSON(JSONDestinationPath, doctorsRawWithNPI);
 
     // Write decorated doctor data to file as CSV
     writeToCSV(CSVDestinationPath, doctorsRawWithNPI);
 
     // Notify user of success
+    spinner.succeed(`Enrichment Success`);
     console.log(
-      yellow(`Enrichment Success`),
-      `\n JSON results written to:`, green(JSONDestinationPath),
-      `\n CSV results written to:`, green(CSVDestinationPath)
+      `\n JSON file:`, green(JSONDestinationPath),
+      `\n CSV file:`, green(CSVDestinationPath)
     );
     console.timeEnd(' Total time:');
   });
