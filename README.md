@@ -88,7 +88,7 @@ Once doctors are matched, the enriched data is written to csv and JSON files in 
 ## Reflections
 I think elasticsearch is a decent tool for this job. So, I was happy that after many failed attempts I was able to seed it successfully. However, this was a new technology for me so the cost of getting it running and working how I wished absorbed more time than I had budgeted for, leaving me in a rush to write the matching logic... which is not my cleanest nor proudest work.
 
-- The utils file too big and should be broken out
+- The utils file is too big and should be broken out
 - Some functions have side effects and could be refactored into pure functions
 - I didn't notice until too late that some Sinai doctors had patient locations. I could have used this for additional matching.
 - I'm curious if NPI_score (from elasticsearch _score) is a good predictor of a match, if so I might be able to exclude matches below a certian threshold, eliminating some false positive matches.
