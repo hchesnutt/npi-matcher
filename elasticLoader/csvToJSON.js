@@ -1,22 +1,27 @@
 const fs = require('fs');
 
-const csv = require('csvtojson');
+const csvtojson = require('csvtojson');
 
 const columns = require('./columns.js');
 
-const pathToNpi = '/Users/henrychesnutt/Downloads/NPPES_Data_Dissemination_July_2018/npidata_pfile_20050523-20180708.csv'
-const pathToDestination = './npi-data.json';
+const pathToNpi = '/Users/henrychesnutt/Documents/Hacking/npi-matcher/elasticLoader/npi-data.csv';
+const pathToDestination = '/Users/henrychesnutt/Documents/Hacking/npi-matcher/elasticLoader/npi-data.json';
 
 const readStream = fs.createReadStream(pathToNpi);
 const writeStream = fs.createWriteStream(pathToDestination);
 
 // Only include specific columns from NPI
-const csvParams = {
+const csv = csvtojson({
   includeColumns: new RegExp(columns),
-};
+});
+
+// Clean degree field
+csv.subscribe((jsonObj) => {
+  jsonObj['Provider Credential Text'] = jsonObj['Provider Credential Text'].replace(/(\.|\,)/g,'');
+});
 
 // Pipe readStream data through csv parser, then pipe to new file
-readStream.pipe(csv(csvParams)).pipe(writeStream);
+readStream.pipe(csv).pipe(writeStream);
 
 readStream.on('end', () => console.log('readstream done'))
 writeStream.on('end', () => {
