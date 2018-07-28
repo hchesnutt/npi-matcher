@@ -1,5 +1,5 @@
 const { resolve } = require('path');
-const { yellow, green } = require('chalk');
+const { green } = require('chalk');
 const ora = require('ora');
 
 const findDoctors = require('./elasticsearch/findDoctors.js');
@@ -9,7 +9,7 @@ const { parseDoctors,
   writeToJSON,
   writeToCSV, } = require('./lib/utils.js');
 
-const pathToDoctorsJSON = resolve(__dirname, './mount_sinai_provider_data.json')
+const pathToDoctorsJSON = resolve(__dirname, './mount_sinai_provider_data.json');
 const JSONDestinationPath = resolve(__dirname, `${pathToDoctorsJSON.replace(/.json$/, '_NPI.json')}`);
 const CSVDestinationPath = resolve(__dirname, `${pathToDoctorsJSON.replace(/.json$/, '_NPI.csv')}`);
 
@@ -17,7 +17,7 @@ const doctorsRaw = require(pathToDoctorsJSON);
 const keys = Object.keys(doctorsRaw);
 const doctors = parseDoctors(doctorsRaw, keys);
 
-console.time(' Total time:')
+console.time(' Total time:');
 const spinner = ora({
   text: 'Matching doctor data to NPI',
   spinner: 'dots10',
@@ -46,11 +46,10 @@ try {
     spinner.succeed(`Enrichment Success`);
     console.log(
       `\n JSON file:`, green(JSONDestinationPath),
-      `\n CSV file:`, green(CSVDestinationPath)
+      `\n CSV file:`, green(CSVDestinationPath),
     );
     console.timeEnd(' Total time:');
   });
 } catch (e) {
   console.log(e);
 }
-

@@ -1,4 +1,4 @@
-# #!/bin/bash
+#!/bin/bash
 
 # Set Elastic search credentials and host
 ES_USER=''
@@ -12,7 +12,7 @@ NPIPATH='/Users/henrychesnutt/Downloads/NPPES_Data_Dissemination_July_2018/npida
 # read headers into destination file
 head -1 $NPIPATH > npi-data.csv
 
-# pipe grep 'NY' into destination file
+# append grep 'NY' into destination file
 grep "\"NY\"" $NPIPATH >> npi-data.csv
 
 
