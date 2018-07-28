@@ -31,10 +31,10 @@ $ cd ./cdminer
 $ npm install
 ```
 
-4. Download example data (Mount Sinai Health Provider Data)
+4. Download example data (Mount Sinai Health Provider Data), must be in root directory
 
 ```shell
-$ curl https://s3-us-west-1.amazonaws.com/hchesnutt-misc/mount_sinai_provider_data.json > mount_sinai_provider_data.json
+$ curl <Mount sinai source> > mount_sinai_provider_data.json
 ```
 
 5. Copy and rename config.example.json to config.json, add elasticsearch credentials
@@ -61,16 +61,16 @@ Tests have not been implemented for this project yet.
 
 npi-matcher was developed with the following assumptions:
 
-- The biggest hurdle is matching the Sinai unique key to NPI number. If that could be done joining the data between two SQL tables wouldn't be a problem.
-- The NPI matching layer would need to generalize to many other doctor data sources.
-- The matching logic would need to be flexible, and allow for complexity.
+- The biggest hurdle is matching the Sinai unique key to NPI number. If this can be done joining the data between two SQL tables wouldn't be a problem
+- The NPI matching layer needs to generalize to many other doctor data sources
+- The matching logic would need to be flexible, and allow for complexity
 
 ## Design Notes
 
 After a cursory investigation of the data it became clear there were two big issues with matching doctors to their NPI number:
 
-- No foreign key relationship exists between NPI and Sinai means that joining has to be done across multiple fields, with different levels of fuzzy matching.
-- NPI doctor data doesn't map a hospital provider to a doctor provider, so limiting NPI records to those including 'Sinai' doesn't work.
+- No foreign key relationship exists between NPI and Sinai means that joining has to be done across multiple fields, with different levels of fuzzy matching
+- NPI doctor data doesn't map a hospital provider to a doctor provider, so limiting NPI records to those including 'Sinai' doesn't work
 
 I opted to seed an Elasticsearch cloud instance with the NPI data for the following reasons:
 
@@ -89,6 +89,7 @@ Once doctors are matched, the enriched data is written to csv and JSON files in 
 I think elasticsearch is a decent tool for this job. So, I was happy that after many failed attempts I was able to seed it successfully. However, this was a new technology for me so the cost of getting it running and working how I wished absorbed more time than I had budgeted for, leaving me in a rush to write the matching logic... which is not my cleanest nor proudest work.
 
 - The utils file too big and should be broken out
+- Some functions have side effects and could be refactored into pure functions
 - I didn't notice until too late that some Sinai doctors had patient locations. I could have used this for additional matching.
 - I'm curious if NPI_score (from elasticsearch _score) is a good predictor of a match, if so I might be able to exclude matches below a certian threshold, eliminating some false positive matches.
 
@@ -96,7 +97,7 @@ I think elasticsearch is a decent tool for this job. So, I was happy that after 
 Some features and next steps I considered but kept in the backlog.
 
 1. Querying is done one at a time using a rate limiter. Batching queries and writing the results to file as they arrive would be more performant.
-2. I'd like to spend more time tweaking the matching queries to queeze out better matches. I think 5%-10% improvement could be found here.
+2. I'd like to spend more time tweaking the matching queries to queeze out better matches. I hypothesize a 5%-10% improvement could be found here.
 3. Sinai has hospital affiliations and NPI has Provider Work Address. These could be leveraged for even better matching using google maps API to retrieve affilition lat/lon coordinates, which could be compared to NPI work address coordinates.
 4. Data transformation and merging need to be their own separate modules. In this project they ended up being tightly coupled with many assumptions about the order of inputs and outputs. Refactoring could improve readability, perfomance, and future development flexibility.
 5. csv/json destination files should be written concurrently, not syncronously one after the other.
@@ -115,7 +116,7 @@ Some features and next steps I considered but kept in the backlog.
 
 ## Author
 
-- **Henry Chesnutt** *t.henry.chesnutt@gmail.com*
+- **Henry Chesnutt** - *t.henry.chesnutt@gmail.com*
 
 ## License
 
