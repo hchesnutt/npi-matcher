@@ -34,7 +34,7 @@ $ npm install
 4. Download example data (Mount Sinai Health Provider Data), must be in root directory
 
 ```shell
-$ curl <Mount sinai source> > mount_sinai_provider_data.json
+$ curl https://s3-us-west-1.amazonaws.com/hchesnutt-misc/mount_sinai_provider_data.json > mount_sinai_provider_data.json
 ```
 
 5. Copy and rename config.example.json to config.json, add elasticsearch credentials
